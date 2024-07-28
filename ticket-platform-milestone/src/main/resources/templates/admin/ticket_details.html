@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket Dettagli</title>
+ 
+    <link rel="stylesheet" href="/webjars/bootstrap/5.1.3/css/bootstrap.min.css">
+   
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body {
+            padding-top: 56px; 
+        }
+        header {
+            background-color: #343a40;
+            padding: 10px 0; 
+            border-bottom: 1px solid #dee2e6;
+        }
+        header h1 {
+            margin: 0;
+            color: #fff;
+            font-size: 1.5rem; 
+        }
+        header nav {
+            margin-top: 5px;
+        }
+        header nav a {
+            color: #fff;
+            margin-right: 15px;
+            font-size: 0.9rem; 
+        }
+        header nav a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            background-color: #f8f9fa;
+            padding: 10px 0; 
+            border-top: 1px solid #dee2e6;
+        }
+        footer p {
+            margin: 0;
+            font-size: 0.9rem; 
+        }
+        .container {
+            max-width: 800px;
+        }
+        .card {
+            border-radius: 0.25rem;
+        }
+        .btn {
+            border-radius: 0.25rem;
+        }
+        .list-unstyled {
+            padding-left: 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="fixed-top">
+        <div class="container text-center">
+            <h1>Dettagli Ticket </h1>
+            <nav class="d-flex justify-content-center">
+                <a href="/admin" class="btn btn-light">Home</a>
+                <a href="/admin/search" class="btn btn-light">Cerca</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container my-5">
+        <section class="mb-5">
+            <h2 class="mb-4">Informazioni Ticket</h2>
+            <div class="card p-4">
+                <p><strong>ID:</strong> <span th:text="${ticket.id}"></span></p>
+                <p><strong>Title:</strong> <span th:text="${ticket.titolo}"></span></p>
+                <p><strong>Description:</strong> <span th:text="${ticket.descrizione}"></span></p>
+                <p><strong>Status:</strong> <span th:text="${ticket.stato}"></span></p>
+                <p><strong>Data:</strong> <span th:text="${ticket.getDataCreazioneFormattata}"></span></p>
+              
+                <div class="mt-4">
+                    <a href="#" th:href="@{/admin/tickets/{id}/edit(id=${ticket.id})}" class="btn btn-warning">Modifica Ticket</a>
+                    <a href="#" th:href="@{/admin/tickets/{id}/delete(id=${ticket.id})}" class="btn btn-danger" onclick="return confirm('Sei sicuro di voler eliminare questo ticket?');">Cancella Ticket</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-5">
+            <h2 class="mb-4">Notes</h2>
+            <div class="card">
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="border-bottom mb-3 pb-3 d-flex justify-content-between align-items-start" th:each="note : ${notes}">
+                            <div>
+                                <h5 class="mb-1" th:text="${note.autore.username}"></h5>
+                                <small class="text-muted" th:text="${note.getDataCreazioneFormattata}"></small>
+                                <p class="mb-0 mt-2" th:text="${note.testo}"></p>
+                            </div>
+                            <form action="#" th:action="@{/admin/notes/{id}/delete(id=${note.id})}" method="post" class="ms-3">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Sei sicuro di voler eliminare questa nota?');">Cancella </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="mb-4">Nota</h2>
+            <form action="#" th:action="@{/admin/tickets/{id}/addNote(id=${ticket.id})}" method="post">
+                <div class="mb-3">
+                    <textarea name="text" class="form-control" rows="4" placeholder="Aggiungi una nota..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-dark">Aggiungi Nota</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="bg-light text-center py-3">
+        <div class="container">
+            <p>&copy; 2024 Davimut</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="/webjars/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Profilo Operatore</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 10px 0;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+        .footer a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4 	col-5">
+		
+        <h1 class="mb-4">Profilo Operatore</h1>
+        <div class="card">
+			
+            <div class="card-header bg-dark text-white ">
+                Dati Personali 			
+				<a class="mx-2 text-white" th:href="@{/operator/dashboard/{id}(id=${user.id})}">Dashboard</a>
+	                <a href="/logout" class="mx-2 text-white">Logout</a>
+            </div>
+            <div class="card-body">
+                <form class=""th:action="@{/operator/profile/{id}/update(id=${user.id})}" method="post">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" class="form-control" th:value="${user.username}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" th:value="${user.email}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Nuova password (lascia vuoto se non vuoi modificarla)">
+                    </div>
+                    <div class="form-group">
+                        <label for="isDisponibile">Disponibilità</label>
+                        <select class="form-control col-3 text-center" id="isDisponibile" name="isDisponibile">
+                            <option value="true" th:selected="${user.isDisponibile}">Disponibile</option>
+                            <option value="false" th:selected="${!user.isDisponibile}">Non Disponibile</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-dark">Aggiorna Profilo</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container text-center">
+          
+        </div>
+    </footer>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
