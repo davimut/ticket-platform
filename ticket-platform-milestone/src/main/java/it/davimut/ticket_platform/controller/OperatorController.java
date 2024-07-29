@@ -114,7 +114,17 @@ public class OperatorController {
         return "redirect:/operator/tickets/" + ticketId + "?userId=" + userId;
     }
 
- 
+    // Modifica i dati dell'operatore
+    @GetMapping("/profile/{id}/edit")
+    public String getOperatorProfile(@PathVariable Integer id, Model model) {
+        Optional<Utente> user = utenteRepository.findById(id);
+        if (user.isPresent()) {
+            model.addAttribute("user", user.get());
+            return "operator/profile";
+        } else {
+            return "redirect:/operator/dashboard/" + id; 
+        }
+    }
 
     @PostMapping("/profile/{id}/update")
     public String updateOperatorProfile(@PathVariable Integer id, @ModelAttribute Utente user, Authentication authentication, Model model) {
