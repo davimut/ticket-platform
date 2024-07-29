@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +38,7 @@ public class OperatorController {
     public String operatorDashboard(@PathVariable Integer id, Authentication authentication, Model model) {
         Utente user = utenteRepository.findByUsername(authentication.getName());
         if (!id.equals(user.getId())) {
-            return "redirect:/error"; // Redirect to error page if user tries to access another operator's dashboard
+            return "redirect:/error";
         }
         List<Ticket> tickets = ticketRepository.findByOperatoreId(id);
         model.addAttribute("tickets", tickets);
@@ -50,7 +51,7 @@ public class OperatorController {
     public String getTicketDetails(@PathVariable Integer id, @RequestParam Integer userId, Authentication authentication, Model model) {
         Utente user = utenteRepository.findByUsername(authentication.getName());
         if (!userId.equals(user.getId())) {
-            return "redirect:/error"; // Redirect to error page if user tries to access another operator's ticket
+            return "redirect:/error"; 
         }
         Optional<Ticket> ticket = ticketRepository.findById(id);
         if (ticket.isPresent() && ticket.get().getOperatore().getId().equals(userId)) {
@@ -60,7 +61,7 @@ public class OperatorController {
             model.addAttribute("userId", userId);
             return "operator/ticket_details";
         } else {
-            return "redirect:/operator/dashboard/" + userId; // Redirect to dashboard if ticket not found or not assigned to user
+            return "redirect:/operator/dashboard/" + userId; 
         }
     }
 
@@ -69,7 +70,7 @@ public class OperatorController {
     public String updateTicketStatus(@PathVariable Integer id, @RequestParam String status, @RequestParam Integer userId, Authentication authentication) {
         Utente user = utenteRepository.findByUsername(authentication.getName());
         if (!userId.equals(user.getId())) {
-            return "redirect:/error"; // Redirect to error page if user tries to update ticket not assigned to them
+            return "redirect:/error";
         }
         Optional<Ticket> ticket = ticketRepository.findById(id);
         if (ticket.isPresent() && ticket.get().getOperatore().getId().equals(userId)) {
@@ -104,7 +105,7 @@ public class OperatorController {
     public String deleteNote(@PathVariable Integer id, @RequestParam Integer ticketId, @RequestParam Integer userId, Authentication authentication) {
         Utente user = utenteRepository.findByUsername(authentication.getName());
         if (!userId.equals(user.getId())) {
-            return "redirect:/error"; // Redirect to error page if user tries to delete note from ticket not assigned to them
+            return "redirect:/error"; 
         }
         Optional<Nota> note = notaRepository.findById(id);
         if (note.isPresent()) {
@@ -113,41 +114,39 @@ public class OperatorController {
         return "redirect:/operator/tickets/" + ticketId + "?userId=" + userId;
     }
 
-    // Modifica i dati dell'operatore
-    @GetMapping("/profile/{id}/edit")
-    public String getOperatorProfile(@PathVariable Integer id, Authentication authentication, Model model) {
-        Utente user = utenteRepository.findByUsername(authentication.getName());
-        if (!id.equals(user.getId())) {
-            return "redirect:/error"; // Redirect to error page if user tries to access another operator's profile
-        }
-        Optional<Utente> operator = utenteRepository.findById(id);
-        if (operator.isPresent()) {
-            model.addAttribute("user", operator.get());
-            return "operator/profile";
-        } else {
-            return "redirect:/operator/dashboard/" + id; // Redirect to dashboard if operator not found
-        }
-    }
-
     @PostMapping("/profile/{id}/update")
-    public String updateOperatorProfile(@PathVariable Integer id, @ModelAttribute Utente user, Authentication authentication) {
+    public String updateOperatorProfile(@PathVariable Integer id, @ModelAttribute Utente user, Authentication authentication, Model model) {
         Utente loggedInUser = utenteRepository.findByUsername(authentication.getName());
-        if (!id.equals(user.getId()) || !id.equals(loggedInUser.getId())) {
-            return "redirect:/error"; // Redirect to error page if user tries to update another operator's profile
+        if (!id.equals(loggedInUser.getId())) {
+            return "redirect:/error";
         }
 
         Optional<Utente> existingUser = utenteRepository.findById(id);
         if (existingUser.isPresent()) {
             Utente updatedUser = existingUser.get();
+
+            // Se l'utente sta cercando di impostare la disponibilità a false
+            if (!user.getIsDisponibile()) {
+                // Controlla se l'operatore ha ticket in stato "Da Fare" o "In Corso"
+                List<Ticket> assignedTickets = ticketRepository.findByOperatoreIdAndStatoIn(id, Arrays.asList("Da Fare", "In Corso"));
+                if (!assignedTickets.isEmpty()) {
+                    // Aggiungi un messaggio di errore al modello e reindirizza al profilo
+                    model.addAttribute("errorMessage", "Non puoi impostare la disponibilità a 'Non Disponibile' se hai ticket in stato 'Da Fare' o 'In Corso'.");
+                    model.addAttribute("user", updatedUser);
+                    return "operator/profile";
+                }
+            }
+
             updatedUser.setUsername(user.getUsername());
             updatedUser.setEmail(user.getEmail());
             if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-                updatedUser.setPassword(passwordEncoder.encode(user.getPassword())); // Hash della password
+                updatedUser.setPassword(passwordEncoder.encode(user.getPassword()));
             }
             updatedUser.setIsDisponibile(user.getIsDisponibile());
             utenteRepository.save(updatedUser);
         }
 
-        return "redirect:/operator/profile/" + id;
+        // Cambia il redirect alla dashboard dell'operatore
+        return "redirect:/operator/dashboard/" + id;
     }
 }

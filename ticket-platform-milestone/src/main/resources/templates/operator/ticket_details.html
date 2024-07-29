@@ -67,6 +67,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h1 class="h3">Dettagli Ticket</h1>
                 <nav class="nav">
+					
                     <a class="nav-link" th:href="@{/operator/profile/{id}/edit(id=${userId})}">Profilo Operatore</a>
                     <a class="nav-link" href="http://localhost:8080/logout">Logout</a>
                 </nav>
@@ -100,6 +101,7 @@
         <section class="mb-5">
             <h3 class="h4">Note</h3>
             <ul class="list-unstyled">
+                <!-- Display only if there are notes -->
                 <li class="border-bottom mb-3 pb-3 d-flex justify-content-between align-items-start" th:each="note : ${notes}">
                     <div>
                         <h5 class="mb-1" th:text="${note.autore.username}"></h5>
@@ -113,6 +115,8 @@
                     </form>
                 </li>
             </ul>
+
+            <!-- Form to add a note, always visible -->
             <form th:action="@{/operator/tickets/{id}/addNote(id=${ticket.id})}" method="post" class="mt-4">
                 <div class="form-group">
                     <label for="text">Aggiungi Nota</label>

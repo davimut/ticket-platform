@@ -10,7 +10,8 @@ import java.util.List;
 public interface TicketRepository extends JpaRepository<Ticket, Integer> {
 	// Trova tutti i ticket assegnati a un determinato operatore
 	List<Ticket> findByOperatoreId(Integer operatoreId);
-
+	
+	List<Ticket> findByOperatoreIdAndStatoIn(Integer operatoreId, List<String> stati);
 	// Trova tutti i ticket con uno stato specifico
 	List<Ticket> findByStato(String stato);
 

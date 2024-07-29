@@ -21,10 +21,10 @@
             flex: 1;
         }
         footer {
-			background-color: #343a40;
+            background-color: #343a40;
             text-align: center;
             padding: 1rem 0;
-			color: #fff;
+            color: #fff;
         }
         header {
             background-color: #343a40;
@@ -62,27 +62,27 @@
     </style>
 </head>
 <body>
-	<header class="bg-dark text-white mb-4 py-3">
-	    <div class="container">
-	        <div class="d-flex justify-content-between align-items-center">
-	            <h1 class="h3">Dettagli Ticket</h1>
-	            <nav class="nav">
-	                <a class="nav-link" th:href="@{/operator/profile/{id}/edit(id=${userId})}">Profilo Operatore</a>
-	                <a class="nav-link" href="http://localhost:8080/logout">Logout</a>
-	            </nav>
-	        </div>
-	    </div>
-	</header>
-   
+    <header class="bg-dark text-white mb-4 py-3">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="h3">Dettagli Ticket</h1>
+                <nav class="nav">
+                    <a class="nav-link" th:href="@{/operator/dashboard/{id}(id=${userId})}">Dashboard</a> <!-- Link alla Dashboard -->
+                    <a class="nav-link" th:href="@{/operator/profile/{id}/edit(id=${userId})}">Profilo Operatore</a>
+                    <a class="nav-link" href="http://localhost:8080/logout">Logout</a>
+                </nav>
+            </div>
+        </div>
+    </header>
 
     <main class="container my-5">
         <!-- Ticket Details -->
-        <section >
+        <section>
             <div class="card p-4">
                 <h5 class="card-title" th:text="${ticket.titolo}"></h5>
                 <p class="card-text" th:text="${ticket.descrizione}"></p>
                 <p><strong>Stato:</strong> <span th:text="${ticket.stato}"></span></p>
-                <form th:action="@{/operator/tickets/{id}/updateStatus(id=${ticket.id})/update}" method="post">
+                <form th:action="@{/operator/tickets/{id}/updateStatus(id=${ticket.id})}" method="post">
                     <div class="form-group">
                         <label for="status">Aggiorna Stato</label>
                         <select class="form-control" id="status" name="status">
@@ -101,19 +101,22 @@
         <section class="mb-5">
             <h3 class="h4">Note</h3>
             <ul class="list-unstyled">
+                <!-- Display only if there are notes -->
                 <li class="border-bottom mb-3 pb-3 d-flex justify-content-between align-items-start" th:each="note : ${notes}">
                     <div>
                         <h5 class="mb-1" th:text="${note.autore.username}"></h5>
                         <small class="text-muted" th:text="${note.getDataCreazioneFormattata}"></small>
                         <p class="mb-0 mt-2" th:text="${note.testo}"></p>
                     </div>
-					<form th:action="@{/operator/notes/{id}/delete(id=${note.id})}" method="post" class="ms-3">
-					    <input type="hidden" name="ticketId" th:value="${ticket.id}">
-					    <input type="hidden" name="userId" th:value="${userId}">
-					    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Sei sicuro di voler eliminare questa nota?');">Cancella</button>
-					</form>
+                    <form th:action="@{/operator/notes/{id}/delete(id=${note.id})}" method="post" class="ms-3">
+                        <input type="hidden" name="ticketId" th:value="${ticket.id}">
+                        <input type="hidden" name="userId" th:value="${userId}">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Sei sicuro di voler eliminare questa nota?');">Cancella</button>
+                    </form>
                 </li>
             </ul>
+
+            <!-- Form to add a note, always visible -->
             <form th:action="@{/operator/tickets/{id}/addNote(id=${ticket.id})}" method="post" class="mt-4">
                 <div class="form-group">
                     <label for="text">Aggiungi Nota</label>

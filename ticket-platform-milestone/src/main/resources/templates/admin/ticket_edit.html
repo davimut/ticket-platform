@@ -85,9 +85,9 @@
             <div class="form-group">
                 <label for="stato">Status</label>
                 <select id="stato" name="stato" th:field="*{stato}" class="form-control" required>
-                    <option value="da_fare" th:selected="${ticket.stato == 'da_fare'}">To Do</option>
-                    <option value="in_corso" th:selected="${ticket.stato == 'in_corso'}">In Progress</option>
-                    <option value="completato" th:selected="${ticket.stato == 'completato'}">Completed</option>
+                    <option value="da fare" th:selected="${ticket.stato == 'da_fare'}">Da Fare</option>
+                    <option value="in corso" th:selected="${ticket.stato == 'in_corso'}">In Corso</option>
+                    <option value="completato" th:selected="${ticket.stato == 'completato'}">Completato</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-dark">Aggiorna Ticket</button>
