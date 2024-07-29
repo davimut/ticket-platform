@@ -53,19 +53,22 @@ public class AdminController {
             return "redirect:/admin";
         }
     }
-
-    // Aggiungi una nota
     @PostMapping("/tickets/{id}/addNote")
-    public String addNote(@PathVariable Integer id, @RequestParam String text, @RequestParam Integer authorId) {
+    public String addNote(@PathVariable Integer id, @RequestParam String text, @RequestParam(required = false) Integer authorId, Model model) {
         Optional<Ticket> ticket = ticketRepository.findById(id);
-        Optional<Utente> author = utenteRepository.findById(authorId);
+        Optional<Utente> author = (authorId != null) ? utenteRepository.findById(authorId) : Optional.empty();
+
         if (ticket.isPresent() && author.isPresent()) {
             Nota note = new Nota();
             note.setTicket(ticket.get());
             note.setTesto(text);
             note.setAutore(author.get());
             notaRepository.save(note);
+        } else {
+            model.addAttribute("errorMessage", "Ticket o autore non trovato.");
+            return "redirect:/admin/tickets/" + id;
         }
+
         return "redirect:/admin/tickets/" + id;
     }
 

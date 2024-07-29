@@ -5,7 +5,6 @@
     <title>Profilo Operatore</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        
         .footer {
             background-color: #343a40;
             color: white;
@@ -24,18 +23,16 @@
     </style>
 </head>
 <body>
-    <div class="container mt-4 	col-5">
-		
+    <div class="container mt-4 col-5">
         <h1 class="mb-4">Profilo Operatore</h1>
         <div class="card">
-			
-            <div class="card-header bg-dark text-white ">
-                Dati Personali 			
-				<a class="mx-2 text-white" th:href="@{/operator/dashboard/{id}(id=${user.id})}">Dashboard</a>
-	                <a href="/logout" class="mx-2 text-white">Logout</a>
+            <div class="card-header bg-dark text-white">
+                Dati Personali
+                <a class="mx-2 text-white" th:href="@{/operator/dashboard/{id}(id=${user.id})}">Dashboard</a>
+                <a href="/logout" class="mx-2 text-white">Logout</a>
             </div>
             <div class="card-body">
-                <form class=""th:action="@{/operator/profile/{id}/update(id=${user.id})}" method="post">
+                <form th:action="@{/operator/profile/{id}/update(id=${user.id})}" method="post">
                     <div class="form-group">
                         <label for="username">Username</label>
                         <input type="text" id="username" name="username" class="form-control" th:value="${user.username}" required>
@@ -64,7 +61,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container text-center">
-          
+            <!-- Aggiungi contenuto del footer se necessario -->
         </div>
     </footer>
     
