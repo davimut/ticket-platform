@@ -2,101 +2,110 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Edit Ticket</title>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        html, body {
-            height: 100%;
-        }
-        body {
-            display: flex;
-            flex-direction: column;
-            margin: 0;
-        }
-        .content {
-            flex: 1;
-        }
-        .navbar {
-            margin-bottom: 20px;
-        }
-        footer {
-            padding: 20px;
-            background-color: #f8f9fa;
-            text-align: center;
-            border-top: 1px solid #e9ecef;
-        }
-        .form-control:focus {
-            box-shadow: none;
-            border-color: #007bff;
-        }
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #004085;
-        }
-    </style>
+	<meta charset="UTF-8">
+	<title>Edit Ticket</title>
+	<link rel="stylesheet" href="/css/styles.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<style>
+		html,
+		body {
+			height: 100%;
+		}
+
+		body {
+			display: flex;
+			flex-direction: column;
+			margin: 0;
+		}
+
+		.content {
+			flex: 1;
+		}
+
+		.navbar {
+			margin-bottom: 20px;
+		}
+
+		footer {
+			padding: 20px;
+			background-color: #f8f9fa;
+			text-align: center;
+			border-top: 1px solid #e9ecef;
+		}
+
+		.form-control:focus {
+			box-shadow: none;
+			border-color: #007bff;
+		}
+
+		.btn-primary {
+			background-color: #007bff;
+			border-color: #007bff;
+		}
+
+		.btn-primary:hover {
+			background-color: #0056b3;
+			border-color: #004085;
+		}
+	</style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-        <a class="navbar-brand" href="/admin">Ticket Platform</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin">Home</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Logout</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+		<a class="navbar-brand" href="/admin">Ticket Platform</a>
+		<div class="collapse navbar-collapse">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item">
+					<a class="nav-link" href="/admin">Home</a>
+				</li>
+			</ul>
+			<ul class="navbar-nav ml-auto">
+				<li class="nav-item">
+					<a class="nav-link" href="/logout">Logout</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
 
-    <main class="content container mt-5">
-        <h1 class="mb-4">Edit Ticket</h1>
-        <form th:action="@{/admin/tickets/{id}/edit(id=${ticket.id})}" th:object="${ticket}" method="post">
-            <div class="form-group">
-                <label for="titolo">Title</label>
-                <input type="text" id="titolo" name="titolo" th:field="*{titolo}" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="descrizione">Description</label>
-                <textarea id="descrizione" name="descrizione" th:field="*{descrizione}" class="form-control" rows="4" required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="categoria">Category</label>
-                <select id="categoria" name="categoria.id" th:field="*{categoria.id}" class="form-control" required>
-                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.nome}"></option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="operatore">Operator</label>
-                <select id="operatore" name="operatore.id" th:field="*{operatore.id}" class="form-control" required>
-                    <option th:each="op : ${operators}" th:value="${op.id}" th:text="${op.username}"></option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="stato">Status</label>
-                <select id="stato" name="stato" th:field="*{stato}" class="form-control" required>
-                    <option value="da fare" th:selected="${ticket.stato == 'da_fare'}">Da Fare</option>
-                    <option value="in corso" th:selected="${ticket.stato == 'in_corso'}">In Corso</option>
-                    <option value="completato" th:selected="${ticket.stato == 'completato'}">Completato</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-dark">Aggiorna Ticket</button>
-        </form>
-    </main>
+	<main class="content container mt-5">
+		<h1 class="mb-4">Edit Ticket</h1>
+		<form th:action="@{/admin/tickets/{id}/edit(id=${ticket.id})}" th:object="${ticket}" method="post">
+			<div class="form-group">
+				<label for="titolo">Title</label>
+				<input type="text" id="titolo" name="titolo" th:field="*{titolo}" class="form-control" required>
+			</div>
+			<div class="form-group">
+				<label for="descrizione">Description</label>
+				<textarea id="descrizione" name="descrizione" th:field="*{descrizione}" class="form-control" rows="4"
+					required></textarea>
+			</div>
+			<div class="form-group">
+				<label for="categoria">Category</label>
+				<select id="categoria" name="categoria.id" th:field="*{categoria.id}" class="form-control" required>
+					<option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.nome}"></option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="operatore">Operator</label>
+				<select id="operatore" name="operatore.id" th:field="*{operatore.id}" class="form-control" required>
+					<option th:each="op : ${operators}" th:value="${op.id}" th:text="${op.username}"></option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="stato">Status</label>
+				<select id="stato" name="stato" th:field="*{stato}" class="form-control" required>
+					<option value="da fare" th:selected="${ticket.stato == 'da_fare'}">Da Fare</option>
+					<option value="in corso" th:selected="${ticket.stato == 'in_corso'}">In Corso</option>
+					<option value="completato" th:selected="${ticket.stato == 'completato'}">Completato</option>
+				</select>
+			</div>
+			<button type="submit" class="btn btn-dark">Aggiorna Ticket</button>
+		</form>
+	</main>
 
-    <footer>
-        <p>&copy; 2024 Ticket Platform.Davimut.</p>
-    </footer>
+	<footer>
+		<p>&copy; 2024 Ticket Platform.Davimut.</p>
+	</footer>
 </body>
 
 </html>

@@ -114,6 +114,8 @@ public class OperatorController {
         return "redirect:/operator/tickets/" + ticketId + "?userId=" + userId;
     }
 
+ 
+
     @PostMapping("/profile/{id}/update")
     public String updateOperatorProfile(@PathVariable Integer id, @ModelAttribute Utente user, Authentication authentication, Model model) {
         Utente loggedInUser = utenteRepository.findByUsername(authentication.getName());

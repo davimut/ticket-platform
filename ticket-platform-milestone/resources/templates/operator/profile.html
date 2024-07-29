@@ -32,7 +32,9 @@
                 <a href="/logout" class="mx-2 text-white">Logout</a>
             </div>
             <div class="card-body">
-                <form th:action="@{/operator/profile/{id}/update(id=${user.id})}" method="post">
+                <!-- Visualizza il messaggio di errore se presente -->
+                <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+                <form th:action="@{/operator/profile/{id}/update(id=${user.id})}" th:object="${user}" method="post">
                     <div class="form-group">
                         <label for="username">Username</label>
                         <input type="text" id="username" name="username" class="form-control" th:value="${user.username}" required>
@@ -61,7 +63,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container text-center">
-			<p>&copy; 2024 Davimut</p>
+            &copy; 2024 Davimut
         </div>
     </footer>
     
