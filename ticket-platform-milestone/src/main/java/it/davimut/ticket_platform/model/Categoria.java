@@ -2,6 +2,8 @@ package it.davimut.ticket_platform.model;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,6 +25,7 @@ public class Categoria {
 	private String nome;
 
 	@OneToMany(mappedBy = "categoria")
+	@JsonManagedReference
 	private Set<Ticket> tickets;
 
 	public Integer getId() {

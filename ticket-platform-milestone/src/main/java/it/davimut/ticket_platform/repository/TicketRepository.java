@@ -15,5 +15,10 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
 	// Trova tutti i ticket con uno stato specifico
 	List<Ticket> findByStato(String stato);
 
-	List<Ticket> findByTitoloContaining(String query);;
+	List<Ticket> findByTitoloContaining(String query);
+	List<Ticket> findByCategoriaId(Integer categoriaId);
+
+	
+
+	
 }

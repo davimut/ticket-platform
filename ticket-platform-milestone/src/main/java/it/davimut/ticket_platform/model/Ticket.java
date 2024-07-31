@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,10 +34,12 @@ public class Ticket {
 
 	@ManyToOne
 	@JoinColumn(name = "operatore_id", nullable = false)
+	@JsonIgnore
 	private Utente operatore;
 
 	@ManyToOne
 	@JoinColumn(name = "categoria_id", nullable = false)
+	@JsonIgnore 
 	private Categoria categoria;
 
 	@NotBlank(message = "il nome della pizza è obbligatorio")
@@ -55,6 +61,7 @@ public class Ticket {
 	 
 	 
 	 @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
+	 @JsonIgnore
 	    private List<Nota> note = new ArrayList<>();
 	 
 	  public Ticket() {

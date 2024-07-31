@@ -41,53 +41,49 @@ public class AdminController {
         return "admin/dashboard";
     }
 
-    @GetMapping("/tickets/{id}")
-    public String getTicketDetails(@PathVariable Integer id, Model model, Authentication authentication) {
-        Optional<Ticket> ticket = ticketRepository.findById(id);
-        Utente user = utenteRepository.findByUsername(authentication.getName());
+	@GetMapping("/tickets/{id}")
+	public String getTicketDetails(@PathVariable Integer id, Model model, Authentication authentication) {
+		Optional<Ticket> ticket = ticketRepository.findById(id);
+		Utente user = utenteRepository.findByUsername(authentication.getName());
 
-        if (ticket.isPresent()) {
-            List<Nota> notes = notaRepository.findByTicketId(id);
-            model.addAttribute("ticket", ticket.get());
-            model.addAttribute("notes", notes);
-            model.addAttribute("user", user);
-            return "admin/ticket_details";
-        } else {
-            return "redirect:/admin";
-        }
-    }
-    @PostMapping("/tickets/{id}/addNote")
-    public String addNote(
-        @PathVariable Integer id,
-        @RequestParam String text,
-        @RequestParam(required = false) Integer userId,
-        Authentication authentication,
-        Model model
-    ) {
-        // Recupera l'utente loggato
-        Utente user = utenteRepository.findByUsername(authentication.getName());
+		if (ticket.isPresent()) {
+			List<Nota> notes = notaRepository.findByTicketId(id);
+			model.addAttribute("ticket", ticket.get());
+			model.addAttribute("notes", notes);
+			model.addAttribute("user", user);
+			return "admin/ticket_details";
+		} else {
+			return "redirect:/admin";
+		}
+	}
 
-        // Recupera il ticket e l'autore della nota
-        Optional<Ticket> ticketOpt = ticketRepository.findById(id);
-        Optional<Utente> noteAuthorOpt = (userId != null) ? utenteRepository.findById(userId) : Optional.empty();
+	@PostMapping("/tickets/{id}/addNote")
+	public String addNote(@PathVariable Integer id, @RequestParam String text,
+			@RequestParam(required = false) Integer userId, Authentication authentication, Model model) {
+		// Recupera l'utente loggato
+		Utente user = utenteRepository.findByUsername(authentication.getName());
 
-        // Se l'utente non è trovato e non è un admin, visualizza un errore
-        if (!user.isAdmin() && noteAuthorOpt.isEmpty()) {
-            model.addAttribute("errorMessage", "Autore non trovato.");
-            return "redirect:/admin/tickets/" + id;
-        }
+		// Recupera il ticket e l'autore della nota
+		Optional<Ticket> ticketOpt = ticketRepository.findById(id);
+		Optional<Utente> noteAuthorOpt = (userId != null) ? utenteRepository.findById(userId) : Optional.empty();
 
-        // Se il ticket e l'autore della nota sono presenti, salva la nota
-        if (ticketOpt.isPresent() && (noteAuthorOpt.isPresent() || user.isAdmin())) {
-            Nota note = new Nota();
-            note.setTicket(ticketOpt.get());
-            note.setTesto(text);
-            note.setAutore(noteAuthorOpt.orElse(user)); // Se l'autore non è trovato, usa l'utente loggato (se è admin)
-            notaRepository.save(note);
-        }
+		// Se l'utente non è trovato e non è un admin, visualizza un errore
+		if (!user.isAdmin() && noteAuthorOpt.isEmpty()) {
+			model.addAttribute("errorMessage", "Autore non trovato.");
+			return "redirect:/admin/tickets/" + id;
+		}
 
-        return "redirect:/admin/tickets/" + id;
-    }
+		// Se il ticket e l'autore della nota sono presenti, salva la nota
+		if (ticketOpt.isPresent() && (noteAuthorOpt.isPresent() || user.isAdmin())) {
+			Nota note = new Nota();
+			note.setTicket(ticketOpt.get());
+			note.setTesto(text);
+			note.setAutore(noteAuthorOpt.orElse(user)); // Se l'autore non è trovato, usa l'utente loggato (se è admin)
+			notaRepository.save(note);
+		}
+
+		return "redirect:/admin/tickets/" + id;
+	}
     // Elimina una nota
     @PostMapping("/notes/{id}/delete")
     public String deleteNote(@PathVariable Integer id, @RequestParam Integer ticketId, Authentication authentication) {
@@ -146,7 +142,7 @@ public class AdminController {
         Optional<Ticket> ticket = ticketRepository.findById(id);
         if (ticket.isPresent()) {
             List<Categoria> categories = categoriaRepository.findAll();
-            List<Utente> availableOperators = utenteRepository.findByIsDisponibileTrue();
+            List<Utente> availableOperators = utenteRepository.findByIsDisponibileTrueAndIsAdminFalse();
             List<String> statuses = List.of("da fare", "in corso", "completato");
 
             model.addAttribute("ticket", ticket.get());

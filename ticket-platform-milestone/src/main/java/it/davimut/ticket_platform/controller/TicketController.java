@@ -14,63 +14,73 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/tickets")
+@RequestMapping("/tickets")
 public class TicketController {
 
-	@Autowired
-	private TicketRepository ticketRepository;
+    @Autowired
+    private TicketRepository ticketRepository;
 
-	@Autowired
-	private UtenteRepository utenteRepository;
+    @Autowired
+    private UtenteRepository utenteRepository;
 
-	@Autowired
-	private CategoriaRepository categoriaRepository;
+    @Autowired
+    private CategoriaRepository categoriaRepository;
 
-	@GetMapping
-	public List<Ticket> getAllTickets() {
-		return ticketRepository.findAll();
-	}
+    @GetMapping
+    public List<Ticket> getAllTickets() {
+        return ticketRepository.findAll();
+    }
 
-	@GetMapping("/{id}")
-	public Ticket getTicketById(@PathVariable Integer id) {
-		Optional<Ticket> ticket = ticketRepository.findById(id);
-		return ticket.orElse(null);
-	}
+    @GetMapping("/{id}")
+    public Ticket getTicketById(@PathVariable Integer id) {
+        Optional<Ticket> ticket = ticketRepository.findById(id);
+        return ticket.orElse(null);
+    }
 
-	@PostMapping
-	public Ticket createTicket(@RequestBody Ticket ticket) {
-		if (ticket.getOperatore() != null && ticket.getOperatore().getIsDisponibile() == null) {
-			throw new IllegalArgumentException("Il ticket deve essere assegnato a un operatore disponibile.");
-		}
+    @GetMapping("/categoria/{categoriaId}")
+    public List<Ticket> getTicketsByCategoria(@PathVariable Integer categoriaId) {
+        return ticketRepository.findByCategoriaId(categoriaId);
+    }
 
-		if (ticket.getOperatore() != null) {
-			Utente operatore = utenteRepository.findById(ticket.getOperatore().getId())
-					.orElseThrow(() -> new IllegalArgumentException("Operatore non trovato"));
-			ticket.setOperatore(operatore);
-		}
+    @GetMapping("/stato/{stato}")
+    public List<Ticket> getTicketsByStato(@PathVariable String stato) {
+        return ticketRepository.findByStato(stato);
+    }
 
-		if (ticket.getCategoria() != null) {
-			Categoria categoria = categoriaRepository.findById(ticket.getCategoria().getId())
-					.orElseThrow(() -> new IllegalArgumentException("Categoria non trovata"));
-			ticket.setCategoria(categoria);
-		}
+    @PostMapping
+    public Ticket createTicket(@RequestBody Ticket ticket) {
+        if (ticket.getOperatore() != null && ticket.getOperatore().getIsDisponibile() == null) {
+            throw new IllegalArgumentException("Il ticket deve essere assegnato a un operatore disponibile.");
+        }
 
-		return ticketRepository.save(ticket);
-	}
+        if (ticket.getOperatore() != null) {
+            Utente operatore = utenteRepository.findById(ticket.getOperatore().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Operatore non trovato"));
+            ticket.setOperatore(operatore);
+        }
 
-	@PutMapping("/{id}")
-	public Ticket updateTicket(@PathVariable Integer id, @RequestBody Ticket ticket) {
-		Optional<Ticket> existingTicket = ticketRepository.findById(id);
-		if (existingTicket.isPresent()) {
-			Ticket existing = existingTicket.get();
-			ticket.setId(id);
-			return ticketRepository.save(ticket);
-		}
-		return null;
-	}
+        if (ticket.getCategoria() != null) {
+            Categoria categoria = categoriaRepository.findById(ticket.getCategoria().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Categoria non trovata"));
+            ticket.setCategoria(categoria);
+        }
 
-	@DeleteMapping("/{id}")
-	public void deleteTicket(@PathVariable Integer id) {
-		ticketRepository.deleteById(id);
-	}
+        return ticketRepository.save(ticket);
+    }
+
+    @PutMapping("/{id}")
+    public Ticket updateTicket(@PathVariable Integer id, @RequestBody Ticket ticket) {
+        Optional<Ticket> existingTicket = ticketRepository.findById(id);
+        if (existingTicket.isPresent()) {
+            Ticket existing = existingTicket.get();
+            ticket.setId(id);
+            return ticketRepository.save(ticket);
+        }
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteTicket(@PathVariable Integer id) {
+        ticketRepository.deleteById(id);
+    }
 }

@@ -16,6 +16,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/operator/**").hasAuthority("ROLE_OPERATOR")
                 .requestMatchers("/error").permitAll()
+                .requestMatchers("/api/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
