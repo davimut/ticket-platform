@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -17,6 +19,13 @@ public class TicketRestController {
 
     @Autowired
     private TicketService ticketService;
+
+    // Endpoint per ottenere tutti i ticket
+    @GetMapping
+    public ResponseEntity<List<Ticket>> getAllTickets() {
+        List<Ticket> tickets = ticketService.getAllTickets();
+        return new ResponseEntity<>(tickets, HttpStatus.OK);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getTicketById(@PathVariable("id") Integer id) {

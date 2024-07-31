@@ -23,6 +23,11 @@ public interface TicketService {
 }
 
 
+
+//http://localhost:8080/api/tickets
+//Restituisce una lista di tutti i ticket presenti nel sistema in formato JSON.
+//Se non ci sono ticket, la risposta sarà una lista vuota
+
 //http://localhost:8080/api/tickets/stato/completato
 //Recupera tutti i ticket con uno stato specifico.
 
